@@ -3,9 +3,10 @@ package model.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Seller implements Serializable{
-
+	
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
@@ -16,6 +17,8 @@ public class Seller implements Serializable{
 	
 	private Department department;
 	
+	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	
 	public Seller() {
 		
 	}
@@ -25,7 +28,7 @@ public class Seller implements Serializable{
 		this.id = id;
 		this.name = name;
 		this.emailString = emailString;
-		this.birthDate = birthDate;
+		this.birthDate = birthDate;  
 		this.baseSalary = baseSalary;
 		this.department = department;
 	}
@@ -137,8 +140,8 @@ public class Seller implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Seller [id=" + id + ", name=" + name + ", emailString=" + emailString + ", birthDate=" + birthDate
-				+ ", baseSalary=" + baseSalary + ", department=" + department + "]";
+		return "Seller [id=" + id + ", name=" + name + ", emailString=" + emailString + ", birthDate=" + birthDate.format(dateFormatter)
+				+ ", baseSalary=" + String.format("%.2f", baseSalary) + ", department=" + department + "]";
 	}
 		
 }
