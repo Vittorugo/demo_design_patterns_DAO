@@ -15,15 +15,15 @@ import model.entities.Seller;
 public class Program {
 
 	public static void main(String[] args) {
-		
+
 		Locale.setDefault(Locale.US);
-		
+
 		SellerDao sellerDao = DaoFactory.createSellerDaO();
-		 
-		Seller seller = new Seller(null,"Cauan","horaDeMorfar@gmail.com", LocalDate.now(), BigDecimal.valueOf(2030.15), new Department(1,null));
-		sellerDao.insert(seller);
-		
-		
+
+		Seller seller = sellerDao.findById(12);
+		seller.setName("Miller");
+		sellerDao.update(seller);
+
 		DB.closeConnection();
 	}
 }
