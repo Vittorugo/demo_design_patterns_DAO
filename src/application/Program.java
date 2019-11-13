@@ -1,5 +1,8 @@
 package application;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,11 +20,8 @@ public class Program {
 		
 		SellerDao sellerDao = DaoFactory.createSellerDaO();
 		 
-		List<Seller> list = sellerDao.findAll();
-		
-		for (Seller s: list) {
-			System.out.println(s);
-		}
+		Seller seller = new Seller(null,"Cauan","horaDeMorfar@gmail.com", LocalDate.now(), BigDecimal.valueOf(2030.15), new Department(1,null));
+		sellerDao.insert(seller);
 		
 		
 		DB.closeConnection();
