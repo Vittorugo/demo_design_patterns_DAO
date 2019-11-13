@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 import db.DB;
 import model.dao.DaoFactory;
-import model.dao.SellerDao;
+import model.dao.DepartmentDao;
+import model.entities.Department;
 
 public class Program {
 
@@ -14,13 +15,10 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		Scanner input = new Scanner(System.in);
 		
-		SellerDao sellerDao = DaoFactory.createSellerDaO();
+		DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+				
+		departmentDao.insert(new Department(5,"Cosmetics"));
 
-		System.out.print("Enter id for delete: ");
-		int id = input.nextInt();
-		input.nextLine();
-		
-		sellerDao.deleteById(id);
 		
 		DB.closeConnection();
 		input.close();
