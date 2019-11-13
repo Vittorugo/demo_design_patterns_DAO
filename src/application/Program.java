@@ -1,10 +1,12 @@
 package application;
 
+import java.util.List;
 import java.util.Locale;
 
 import db.DB;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
+import model.entities.Department;
 import model.entities.Seller;
 
 public class Program {
@@ -14,10 +16,13 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		
 		SellerDao sellerDao = DaoFactory.createSellerDaO();
+		 
+		List<Seller> list = sellerDao.findByDepartment(new Department(3, null));
 		
-		 Seller seller = sellerDao.findById(10);
+		for (Seller s: list) {
+			System.out.println(s);
+		}
 		
-		System.out.println(seller);
 		
 		DB.closeConnection();
 	}
