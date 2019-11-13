@@ -2,9 +2,11 @@ package model.dao.impl;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,38 @@ public class SellerDaoJDBC implements SellerDao {
 	
 	@Override
 	public void insert(Seller seller) {
-
+				
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO seller (Name,Email,BirthDate,BaseSalary,DepartmentId) values ( ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setString(1, seller.getName());
+			preparedStatement.setString(2, seller.getEmailString());
+			preparedStatement.setDate(3, new java.sql.Date(Date.valueOf(seller.getBirthDate()).getTime())); // convert LocalDate to Date SQL.
+			preparedStatement.setDouble(4, seller.getBaseSalary().doubleValue());
+			preparedStatement.setInt(5, seller.getDepartment().getId());
+			
+			int rowsAffected = preparedStatement.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				resultSet = preparedStatement.getGeneratedKeys(); // return id seller.
+				if(resultSet.next()) {
+					int id = resultSet.getInt(1); // seting new id compatible to sql
+					seller.setId(id);
+					
+					System.out.println("Inserted row: " + findById(resultSet.getInt(1)));
+				}			
+			} else {
+				throw new DbException("Unexpected error! No rows affected!");
+			}
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(preparedStatement);
+			DB.closeResultSet(resultSet);
+		}
 	}
 
 	@Override
