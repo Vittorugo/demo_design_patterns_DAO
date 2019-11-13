@@ -49,17 +49,8 @@ public class SellerDaoJDBC implements SellerDao {
 			resultSet = preparedStatement.executeQuery(); // return search result
 			
 			if(resultSet.next()) { // true if result > 0
-				Department department = new Department();
-				department.setId(resultSet.getInt("DepartmentId")); // table return for department id instance
-				department.setName(resultSet.getString("DepName")); // table return for department name instance
-				
-				Seller seller = new Seller();
-				seller.setId(resultSet.getInt("Id"));
-				seller.setName(resultSet.getString("Name"));
-				seller.setEmailString(resultSet.getString("Email"));
-				seller.setBirthDate(new java.sql.Date((resultSet.getDate("BirthDate").getTime())).toLocalDate()); // convert sql date in localdate
-				seller.setBaseSalary(BigDecimal.valueOf(resultSet.getDouble("BaseSalary"))); // convert sql double in BigDecimal
-				seller.setDepartment(department); // obj department
+				Department department = instantiateDepartment(resultSet);
+				Seller seller = instantiateSeller(resultSet,department);
 				
 				return seller;
 			}
@@ -72,6 +63,24 @@ public class SellerDaoJDBC implements SellerDao {
 			DB.closeStatement(preparedStatement);
 			DB.closeResultSet(resultSet);
 		}	
+	}
+
+	private Seller instantiateSeller(ResultSet resultSet, Department department) throws SQLException {
+		Seller seller = new Seller();
+		seller.setId(resultSet.getInt("Id"));
+		seller.setName(resultSet.getString("Name"));
+		seller.setEmailString(resultSet.getString("Email"));
+		seller.setBirthDate(new java.sql.Date((resultSet.getDate("BirthDate").getTime())).toLocalDate()); // convert sql date in localdate
+		seller.setBaseSalary(BigDecimal.valueOf(resultSet.getDouble("BaseSalary"))); // convert sql double in BigDecimal
+		seller.setDepartment(department); // obj department
+		return seller;
+	}
+
+	private Department instantiateDepartment(ResultSet resultSet) throws SQLException {
+		Department department = new Department();
+		department.setId(resultSet.getInt("DepartmentId")); // table return for department id instance
+		department.setName(resultSet.getString("DepName")); // table return for department name instance
+		return department;
 	}
 
 	@Override
