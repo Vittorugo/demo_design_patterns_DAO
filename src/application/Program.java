@@ -17,8 +17,9 @@ public class Program {
 		
 		DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 				
-		departmentDao.insert(new Department(5,"Cosmetics"));
-
+		departmentDao.update(new Department(3, "Tools"));
+		
+		departmentDao.deleteById(5);
 		
 		DB.closeConnection();
 		input.close();
