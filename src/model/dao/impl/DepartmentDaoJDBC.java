@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -99,12 +100,64 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
 	@Override
 	public Department findById(Integer id) {
-		return null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			preparedStatement = connection.prepareStatement("SELECT department.* FROM department WHERE department.Id = ?");
+			
+			preparedStatement.setInt(1, id);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				Department department = getDepartment(resultSet);
+				return department;
+			} else {
+				throw new DbException("No department found for this Id!");
+			}
+			
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(preparedStatement);
+			DB.closeResultSet(resultSet);
+		}
 	}
 
 	@Override
 	public List<Department> findAll() {
-		return null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Department> list = new ArrayList<Department>();
+		
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM department");
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				Department department = getDepartment(resultSet);
+				list.add(department);
+			}
+			
+			return list;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(preparedStatement);
+			DB.closeResultSet(resultSet);
+		}
+	}
+	
+	private Department getDepartment(ResultSet resultSet) throws SQLException {
+		Department department = new Department();
+		
+		department.setId(resultSet.getInt("Id"));
+		department.setName(resultSet.getString("Name"));
+		
+		return department;
 	}
 
 }
