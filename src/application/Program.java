@@ -6,7 +6,6 @@ import java.util.Scanner;
 import db.DB;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
-import model.entities.Department;
 
 public class Program {
 
@@ -17,9 +16,9 @@ public class Program {
 		
 		DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 				
-		departmentDao.update(new Department(3, "Tools"));
-		
-		departmentDao.deleteById(5);
+		System.out.println(departmentDao.findById(4));
+
+		departmentDao.findAll().forEach(d -> System.out.println(d));
 		
 		DB.closeConnection();
 		input.close();
